@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import copySignIn from "./copy/copySignIn.json";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
 
 const {
   title,
@@ -14,20 +17,35 @@ const {
   signUp,
 } = copySignIn;
 
+const signInSchema = z.object({
+  email: z.email("Enter a valid email"),
+  password: z.string().min(6, "At least 6 characters"),
+});
+
+type SignInData = z.infer<typeof signInSchema>;
+
 export default function SignInPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInData>({
+    resolver: zodResolver(signInSchema),
+  });
 
-    // fake login (replace with GraphQL mutation)
-    if (email === "test@example.com" && password === "123456") {
-      localStorage.setItem("token", "fake-jwt-token");
+  const onSubmit = async (data: SignInData) => {
+    const res = await signIn("credentials", {
+      redirect: false,
+      email: data.email,
+      password: data.password,
+    });
+
+    if (!res?.error) {
       router.push("/dashboard");
     } else {
-      alert("Invalid credentials");
+      console.error("Invalid login");
     }
   };
 
@@ -36,26 +54,30 @@ export default function SignInPage() {
       <section className="flex flex-col w-1/3 w-xl p-6">
         <h1 className="mb-4 text-3xl font-bold">Caleffi Catalani</h1>
         <h2 className="text-xl font-regular">{title}</h2>
-        <form onSubmit={handleSubmit} className="space-y-4 mt-10">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-10">
           <label className="block text-sm font-medium">
             {emailLabel}
             <input
               type="email"
+              {...register("email")}
               placeholder={emailLabel}
-              className="w-full placeholder:text-graphite bg-slate-blue-gray rounded-full border px-4 py-2 mt-2"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              className="w-full placeholder:text-graphite bg-slate-blue-gray rounded-full border px-4 py-2 mt-2 mb-1"
             />
+            {errors.email && (
+              <span className="text-red-500">{errors.email.message}</span>
+            )}
           </label>
           <label className="block text-sm font-medium">
             {passwordLabel}
             <input
               type="password"
+              {...register("password")}
               placeholder={passwordLabel}
-              className="w-full rounded-full border px-4 py-2 mt-2"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-full border px-4 py-2 mt-2 mb-1"
             />
+            {errors.password && (
+              <span className="text-red-500">{errors.password.message}</span>
+            )}
           </label>
           <p className="text-sm text-right text-[var(--sky-blue)] hover:underline cursor-pointer">
             {forgotPassword}
@@ -64,7 +86,7 @@ export default function SignInPage() {
             type="submit"
             className="w-full rounded-full py-3 mt-6 text-pure-white transition-colors cursor-pointer duration-400 ease-in-out"
           >
-            {loginButton}
+            {isSubmitting ? "Loading..." : loginButton}
           </button>
         </form>
 
