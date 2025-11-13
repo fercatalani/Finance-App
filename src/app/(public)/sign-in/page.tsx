@@ -1,11 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import copySignIn from "./copy/copySignIn.json";
+import copySignIn from "./signIn.copy.json";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
+import { Input } from "@/app/components/Input";
+import Image from "next/image";
+import imageGif from "@/app/assets/images/image.gif";
 
 const {
   title,
@@ -55,58 +58,44 @@ export default function SignInPage() {
         <h1 className="mb-4 text-3xl font-bold">Caleffi Catalani</h1>
         <h2 className="text-xl font-regular">{title}</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-10">
-          <label className="block text-sm font-medium">
-            {emailLabel}
-            <input
-              type="email"
-              {...register("email")}
-              placeholder={emailLabel}
-              className="w-full placeholder:text-graphite bg-slate-blue-gray rounded-full border px-4 py-2 mt-2 mb-1"
-            />
-            {errors.email && (
-              <span className="text-red-500">{errors.email.message}</span>
-            )}
-          </label>
-          <label className="block text-sm font-medium">
-            {passwordLabel}
-            <input
-              type="password"
-              {...register("password")}
-              placeholder={passwordLabel}
-              className="w-full rounded-full border px-4 py-2 mt-2 mb-1"
-            />
-            {errors.password && (
-              <span className="text-red-500">{errors.password.message}</span>
-            )}
-          </label>
-          <p className="text-sm text-right text-[var(--sky-blue)] hover:underline cursor-pointer">
+          <Input
+            label={emailLabel}
+            type="email"
+            register={register("email")}
+            error={errors.email}
+          />
+          <Input
+            label={passwordLabel}
+            type="password"
+            register={register("password")}
+            error={errors.password}
+          />
+          <p className="text-sm text-right text-sky-blue hover:underline cursor-pointer">
             {forgotPassword}
           </p>
           <button
             type="submit"
-            className="w-full rounded-full py-3 mt-6 text-pure-white transition-colors cursor-pointer duration-400 ease-in-out"
+            className="primaryButton py-3 mt-6 text-pure-white transition-colors cursor-pointer duration-400 ease-in-out"
           >
             {isSubmitting ? "Loading..." : loginButton}
           </button>
         </form>
-
         <hr className="my-16 w-80 self-center border-[var(--charcoal-blue)]" />
+
         <p className="text-center text-sm">
           {noAccount}{" "}
-          <span className="text-[var(--sky-blue)] hover:underline cursor-pointer">
+          <button className="text-sky-blue hover:underline cursor-pointer">
             {signUp}
-          </span>
+          </button>
         </p>
       </section>
-      <section className="h-screen w-2/3 hidden lg:flex items-center justify-center relative overflow-hidden rounded-2xl bg-[var(--charcoal-blue)]">
-        <div
-          className="absolute bottom-40 left-20 w-300 h-300 rounded-full pointer-events-none 
-           bg-[radial-gradient(circle_at_80%_20%,var(--sky-blue)_0%,var(--powder-blue)_10%,transparent_70%)]"
-        ></div>
-        <div
-          className="absolute top-0 right-10 w-500 h-700 rounded-full pointer-events-none 
-           bg-[radial-gradient(circle_at_50%_40%,var(--sky-blue)_0%,var(--powder-blue)_0%,transparent_40%)]"
-        ></div>
+      <section className="h-screen w-2/3 hidden lg:flex items-center justify-center relative overflow-hidden rounded-2xl bg-transparent">
+        <Image
+          src={imageGif}
+          alt=""
+          className="w-full h-full object-cover"
+          unoptimized
+        />
       </section>
     </div>
   );
