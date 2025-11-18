@@ -1,0 +1,12 @@
+{
+  "title": "Create your account",
+  "subtitle": "Let us handle the numbers while you focus on life.",
+  "firstNameLabel": "First Name",
+  "lastNameLabel": "Last Name",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "confirmPasswordLabel": "Confirm Password",
+  "signUpButton": "Sign up",
+  "haveAccount": "Already have an account?",
+  "signIn": "Sign in"
+}
