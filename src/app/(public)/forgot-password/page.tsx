@@ -14,7 +14,6 @@ const { title, subtitle, emailLabel, resetButton, noAccount, signIn } =
 
 const signInSchema = z.object({
   email: z.email("Enter a valid email"),
-  password: z.string().min(6, "At least 6 characters"),
 });
 
 type ForgotPasswordData = z.infer<typeof signInSchema>;
@@ -30,16 +29,15 @@ export default function ForgotPasswordPage() {
     resolver: zodResolver(signInSchema),
   });
 
+  // TODO: implement actual forgot password flow related to send code to email and reset password
   const onSubmit = async (data: ForgotPasswordData) => {
-    // const res = await signIn("credentials", {
-    //   redirect: false,
-    //   email: data.email,
-    // });
-    // if (!res?.error) {
-    //   router.push("/dashboard");
-    // } else {
-    //   console.error("Invalid email");
-    // }
+    await fetch("/api/auth/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    return router.push("/sign-in");
   };
 
   return (

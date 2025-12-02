@@ -1,15 +1,42 @@
 "use client";
-import { useSession } from "next-auth/react";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getCurrentUser, signOut } from "@/lib/auth-client";
 
 export default function Dashboard() {
-  const { data: session, status } = useSession();
+  const [user, setUser] = useState<{ name: string } | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  console.log("Session status:", status);
-  console.log("Session data:", session);
-  if (status === "loading") return <p>Loading...</p>;
+  const router = useRouter();
 
-  // TODO: Investigate why this line doesnt work as expected
-  if (!session) return <p>Access denied</p>;
+  useEffect(() => {
+    getCurrentUser().then((data) => {
+      if (!data) {
+        router.push("/sign-in");
+        return;
+      }
 
-  return <p>Welcome, {session.user?.name}</p>;
+      setUser({ name: `${data.firstName} ${data.lastName}` });
+      setLoading(false);
+    });
+  }, [router]);
+
+  async function handleSignOut() {
+    await signOut();
+    router.push("/sign-in");
+  }
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  return (
+    <div className="flex flex-col">
+      <p>Welcome, {user?.name}</p>
+      <button className="bg-metallic-blue" onClick={handleSignOut}>
+        Sign Out
+      </button>
+    </div>
+  );
 }

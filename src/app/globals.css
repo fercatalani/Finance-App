@@ -42,10 +42,12 @@
   .alert-error {
     background-color: var(--coral-red);
     color: var(--pure-white);
+    border-radius: 8px;
   }
 
   .alert-success {
     background-color: var(--emerald-green);
     color: var(--pure-white);
+    border-radius: 8px;
   }
 }

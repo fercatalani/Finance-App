@@ -24,20 +24,14 @@ const {
 
 const signUpSchema = z
   .object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    email: z.email("Enter a valid email"),
-    password: z
-      .string()
-      .min(6, "At least 6 characters")
-      .max(20, "At most 20 characters"),
-    confirmPassword: z
-      .string()
-      .min(6, "At least 6 characters")
-      .max(20, "At most 20 characters"),
+    firstName: z.string().min(1, "Required"),
+    lastName: z.string().min(1, "Required"),
+    email: z.email("Invalid email"),
+    password: z.string().min(8, "At least 8 characters"),
+    confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
@@ -54,16 +48,13 @@ export default function SignUpPage() {
   });
 
   const onSubmit = async (data: SignUpData) => {
-    // const res = await signIn("credentials", {
-    //   redirect: false,
-    //   email: data.email,
-    //   password: data.password,
-    // });
-    // if (!res?.error) {
-    //   router.push("/dashboard");
-    // } else {
-    //   console.error("Invalid login");
-    // }
+    await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    return router.push("/sign-in");
   };
 
   return (
@@ -75,20 +66,22 @@ export default function SignUpPage() {
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-4 w-full mt-10"
         >
-          <Input
-            label={firstNameLabel}
-            placeholder="Enter your first name"
-            type="text"
-            register={register("firstName")}
-            error={errors.firstName}
-          />
-          <Input
-            label={lastNameLabel}
-            placeholder="Enter your last name"
-            type="text"
-            register={register("lastName")}
-            error={errors.lastName}
-          />
+          <div className="flex flex-row gap-4">
+            <Input
+              label={firstNameLabel}
+              placeholder="Enter your first name"
+              type="text"
+              register={register("firstName")}
+              error={errors.firstName}
+            />
+            <Input
+              label={lastNameLabel}
+              placeholder="Enter your last name"
+              type="text"
+              register={register("lastName")}
+              error={errors.lastName}
+            />
+          </div>
           <Input
             label={emailLabel}
             placeholder="Enter your email"
@@ -102,6 +95,13 @@ export default function SignUpPage() {
             type="password"
             register={register("password")}
             error={errors.password}
+          />
+          <Input
+            label={confirmPasswordLabel}
+            placeholder="Confirm your password"
+            type="password"
+            register={register("confirmPassword")}
+            error={errors.confirmPassword}
           />
           <button
             type="submit"

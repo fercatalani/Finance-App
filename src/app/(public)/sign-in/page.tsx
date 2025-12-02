@@ -5,7 +5,6 @@ import copySignIn from "./signIn.copy.json";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
 import { Input } from "@/app/components/Input";
 import Image from "next/image";
 import imageGif from "@/app/assets/images/image.gif";
@@ -38,18 +37,15 @@ export default function SignInPage() {
     resolver: zodResolver(signInSchema),
   });
 
-  const onSubmit = async (data: SignInData) => {
-    const res = await signIn("credentials", {
-      redirect: false,
-      email: data.email,
-      password: data.password,
+  const onSubmit = async (body: SignInData) => {
+    await fetch("/api/auth/signin", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
     });
 
-    if (!res?.error) {
-      router.push("/dashboard");
-    } else {
-      console.error("Invalid login");
-    }
+    return router.push("/dashboard");
   };
 
   return (
