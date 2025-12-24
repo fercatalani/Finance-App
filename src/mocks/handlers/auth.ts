@@ -21,18 +21,25 @@ export const authHandlers = [
   http.post("/api/auth/signin", async ({ request }) => {
     const { email, password } = (await request.json()) as SignInRequest;
 
-    // simple validation
     if (email === "test@example.com" && password === "password123") {
-      return HttpResponse.json({
-        success: true,
-        token: "fake-jwt-token",
-        user: {
-          id: "1",
-          firstName: "Jane",
-          lastName: "Doe",
-          email,
+      return HttpResponse.json(
+        {
+          success: true,
+          token: "fake-jwt-token",
+          user: {
+            id: "1",
+            firstName: "Jane",
+            lastName: "Doe",
+            email,
+          },
         },
-      });
+        {
+          headers: {
+            "Set-Cookie":
+              "session=fake-session; HttpOnly; Path=/; Max-Age=3600",
+          },
+        }
+      );
     }
 
     return HttpResponse.json(
@@ -46,7 +53,6 @@ export const authHandlers = [
     const { firstName, lastName, email, password } =
       (await request.json()) as SignUpRequest;
 
-    // simulates the user creation process
     return HttpResponse.json({
       success: true,
       user: {
@@ -63,7 +69,6 @@ export const authHandlers = [
   http.post("/api/auth/forgot-password", async ({ request }) => {
     const { email } = (await request.json()) as ForgotPasswordRequest;
 
-    // simulates the email exists
     return HttpResponse.json({
       success: true,
       message: "Reset code sent to your email.",
