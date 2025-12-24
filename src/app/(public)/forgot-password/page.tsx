@@ -8,6 +8,7 @@ import Image from "next/image";
 import imageGif from "@/app/assets/images/image.gif";
 import copyForgotPassword from "./forgotPassword.copy.json";
 import { useRouter } from "next/navigation";
+import { forgotPassword } from "@/lib/auth";
 
 const { title, subtitle, emailLabel, resetButton, noAccount, signIn } =
   copyForgotPassword;
@@ -31,11 +32,9 @@ export default function ForgotPasswordPage() {
 
   // TODO: implement actual forgot password flow related to send code to email and reset password
   const onSubmit = async (data: ForgotPasswordData) => {
-    await fetch("/api/auth/forgot-password", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    const res = await forgotPassword(data);
+
+    if (!res) return;
 
     return router.push("/sign-in");
   };
@@ -54,6 +53,7 @@ export default function ForgotPasswordPage() {
             type="email"
             placeholder="Enter your email"
             register={register("email")}
+            autocomplete="email"
             error={errors.email}
           />
           <button

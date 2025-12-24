@@ -6,6 +6,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/app/components/Input";
+import { signIn } from "@/lib/auth";
 import Image from "next/image";
 import imageGif from "@/app/assets/images/image.gif";
 
@@ -38,12 +39,15 @@ export default function SignInPage() {
   });
 
   const onSubmit = async (body: SignInData) => {
-    await fetch("/api/auth/signin", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    const res = await signIn(body);
+
+    if (!res) return;
+
+    if (process.env.NODE_ENV === "development") {
+      try {
+        document.cookie = "session=fake-session; Path=/";
+      } catch {}
+    }
 
     return router.push("/dashboard");
   };
@@ -62,6 +66,7 @@ export default function SignInPage() {
             placeholder="Enter your email"
             type="email"
             register={register("email")}
+            autocomplete="email"
             error={errors.email}
           />
           <Input
@@ -69,6 +74,7 @@ export default function SignInPage() {
             placeholder="Enter your password"
             type="password"
             register={register("password")}
+            autocomplete="current-password"
             error={errors.password}
           />
           <button

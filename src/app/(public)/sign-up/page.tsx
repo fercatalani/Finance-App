@@ -6,6 +6,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/app/components/Input";
+import { signUp } from "@/lib/auth";
 import Image from "next/image";
 import imageGif from "@/app/assets/images/image.gif";
 
@@ -48,11 +49,9 @@ export default function SignUpPage() {
   });
 
   const onSubmit = async (data: SignUpData) => {
-    await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    const res = await signUp(data);
+
+    if (!res) return;
 
     return router.push("/sign-in");
   };
@@ -72,6 +71,7 @@ export default function SignUpPage() {
               placeholder="Enter your first name"
               type="text"
               register={register("firstName")}
+              autocomplete="given-name"
               error={errors.firstName}
             />
             <Input
@@ -79,6 +79,7 @@ export default function SignUpPage() {
               placeholder="Enter your last name"
               type="text"
               register={register("lastName")}
+              autocomplete="family-name"
               error={errors.lastName}
             />
           </div>
@@ -87,6 +88,7 @@ export default function SignUpPage() {
             placeholder="Enter your email"
             type="email"
             register={register("email")}
+            autocomplete="email"
             error={errors.email}
           />
           <Input
@@ -94,6 +96,7 @@ export default function SignUpPage() {
             placeholder="Enter your password"
             type="password"
             register={register("password")}
+            autocomplete="new-password"
             error={errors.password}
           />
           <Input
@@ -101,6 +104,7 @@ export default function SignUpPage() {
             placeholder="Confirm your password"
             type="password"
             register={register("confirmPassword")}
+            autocomplete="new-password"
             error={errors.confirmPassword}
           />
           <button
