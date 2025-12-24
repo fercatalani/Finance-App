@@ -1,7 +1,16 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-// TODO: implement actual middleware logic for auth protection when backend is ready
-export function middleware() {
+// Minimal cookie-presence check for protected routes.
+// Per project rules: do not parse or decode tokens here — only check cookie presence.
+export function middleware(req: NextRequest) {
+  const session = req.cookies.get("session")?.value;
+
+  if (!session) {
+    const signInUrl = new URL("/sign-in", req.url);
+    return NextResponse.redirect(signInUrl);
+  }
+
   return NextResponse.next();
 }
 
