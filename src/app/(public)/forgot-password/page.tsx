@@ -4,6 +4,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/app/components/Input";
+import { Button } from "@/app/components/Button";
 import Image from "next/image";
 import imageGif from "@/app/assets/images/image.gif";
 import copyForgotPassword from "./forgotPassword.copy.json";
@@ -40,7 +41,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center">
+    <>
       <section className="flex flex-col min-w-10 lg:w-1/3 p-8">
         <h1 className="mb-4 text-3xl font-bold">{title}</h1>
         <h2 className="text-lg font-regular">{subtitle}</h2>
@@ -56,12 +57,9 @@ export default function ForgotPasswordPage() {
             autocomplete="email"
             error={errors.email}
           />
-          <button
-            type="submit"
-            className="primaryButton py-3 mt-6 text-pure-white transition-colors cursor-pointer duration-400 ease-in-out"
-          >
-            {isSubmitting ? "Loading..." : resetButton}
-          </button>
+          <Button type="submit" isLoading={isSubmitting} className="mt-6">
+            {resetButton}
+          </Button>
         </form>
         <hr className="my-16 w-80 self-center border-[var(--charcoal-blue)]" />
 
@@ -83,6 +81,6 @@ export default function ForgotPasswordPage() {
           unoptimized
         />
       </section>
-    </div>
+    </>
   );
 }

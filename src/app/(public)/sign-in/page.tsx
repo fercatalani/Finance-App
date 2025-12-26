@@ -6,6 +6,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/app/components/Input";
+import { Button } from "@/app/components/Button";
 import { signIn } from "@/lib/auth";
 import Image from "next/image";
 import imageGif from "@/app/assets/images/image.gif";
@@ -53,7 +54,7 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center">
+    <>
       <section className="flex flex-col min-w-10 lg:w-1/3 p-8">
         <h1 className="mb-4 text-3xl font-bold">Caleffi Catalani</h1>
         <h2 className="text-xl font-regular">{title}</h2>
@@ -77,12 +78,9 @@ export default function SignInPage() {
             autocomplete="current-password"
             error={errors.password}
           />
-          <button
-            type="submit"
-            className="primaryButton py-3 text-pure-white transition-colors cursor-pointer duration-400 ease-in-out"
-          >
-            {isSubmitting ? "Loading..." : loginButton}
-          </button>
+          <Button type="submit" isLoading={isSubmitting}>
+            {loginButton}
+          </Button>
         </form>
         <hr className="my-16 w-80 self-center border-[var(--charcoal-blue)]" />
 
@@ -112,6 +110,6 @@ export default function SignInPage() {
           unoptimized
         />
       </section>
-    </div>
+    </>
   );
 }
