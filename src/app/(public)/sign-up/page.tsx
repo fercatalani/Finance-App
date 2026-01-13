@@ -59,7 +59,7 @@ export default function SignUpPage() {
 
   return (
     <>
-      <section className="flex flex-col min-w-10 lg:w-1/3 p-8">
+      <section className="flex flex-col w-[480px] lg:w-1/3 p-8">
         <h1 className="mb-4 text-3xl font-bold">{title}</h1>
         <h2 className="text-lg font-regular">{subtitle}</h2>
         <form

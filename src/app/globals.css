@@ -27,17 +27,8 @@
 
 @layer components {
   .primaryButton {
-    @apply bg-[var(--charcoal-blue)] hover:bg-[#215974] w-full rounded-full py-3 mt-6 text-pure-white transition-colors cursor-pointer ease-in-out duration-300;
+    @apply bg-[var(--charcoal-blue)] hover:bg-[var(--metallic-blue)] w-full rounded-full py-3 mt-6 text-pure-white transition-colors cursor-pointer ease-in-out duration-300;
   }
-
-  /* .primaryButton {
-    background-color: var(--charcoal-blue);
-    &:hover {
-      background-color: var(--steel-blue);
-      }
-      width: 100%;
-      border-radius: 24px;
-      } */
 
   .alert-error {
     background-color: var(--coral-red);
