@@ -6,11 +6,24 @@ Finance App is a financial management application designed to help users track t
 
 ## Folder Structure
 
+### APP
+
+**Generated:** 2/12/2026, 4:20:47 PM
+**Root Path:** `/Users/fcatalani/finance-app/src`
+
 ```
 ├── 📁 app
 │   ├── 📁 (private)
 │   │   ├── 📁 dashboard
+│   │   │   ├── 📄 DashboardClient.tsx
 │   │   │   ├── ⚙️ dashboard.copy.json
+│   │   │   ├── 📄 error.tsx
+│   │   │   ├── 📄 loading.tsx
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 finances
+│   │   │   ├── 📄 FinancesClient.tsx
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 settings
 │   │   │   └── 📄 page.tsx
 │   │   └── 📄 layout.tsx
 │   ├── 📁 (public)
@@ -26,24 +39,53 @@ Finance App is a financial management application designed to help users track t
 │   │   │   ├── 📄 page.tsx
 │   │   │   └── ⚙️ signUp.copy.json
 │   │   └── 📄 layout.tsx
+│   ├── 📁 api
+│   │   └── 📁 finances
+│   │       └── 📄 route.ts
 │   ├── 📁 assets
 │   │   └── 📁 images
 │   │       └── 🖼️ image.gif
 │   ├── 📁 components
+│   │   ├── 📁 __tests__
+│   │   │   └── 📄 Input.test.tsx
 │   │   ├── 📄 Button.tsx
-│   │   └── 📄 Input.tsx
+│   │   ├── 📄 Input.tsx
+│   │   ├── 📄 NavigationDesktop.tsx
+│   │   └── 📄 NavigationMobile.tsx
+│   ├── 📁 dev
+│   │   └── 📁 api-demo
 │   ├── 📄 AuthProvider.tsx
 │   ├── 🎨 globals.css
 │   ├── 📄 layout.tsx
 │   └── 📄 page.tsx
 ├── 📁 lib
-│   └── 📄 auth-client.ts
-├── 📁 mocks
-│   ├── 📁 handlers
-│   │   ├── 📄 auth.ts
-│   │   └── 📄 finances.ts
-│   └── 📄 browser.ts
+│   ├── 📄 auth-client.ts
+│   ├── 📄 auth.ts
+│   └── 📄 get-server-session.ts
 └── 📄 middleware.ts
+```
+
+### API
+
+**Generated:** 2/12/2026, 4:18:18 PM
+**Root Path:** `/Users/fcatalani/finance-app/apps`
+
+```
+└── 📁 api
+    ├── 📁 controllers
+    │   └── 📄 transactionsController.js
+    ├── 📁 middleware
+    │   └── 📄 validateTransaction.js
+    ├── 📁 routes
+    │   ├── 📄 auth.js
+    │   ├── 📄 finances.js
+    │   └── 📄 transactions.js
+    ├── 📁 store
+    │   └── 📄 inMemoryStore.js
+    ├── 📝 README.md
+    ├── 📄 index.js
+    ├── ⚙️ package-lock.json
+    └── ⚙️ package.json
 ```
 
 ## Architecture
@@ -53,19 +95,17 @@ The architecture is planned to be build with a clear separation between the fron
 ### Tech Stack
 
 - **Frontend**
-
   - **Next.js (App Router)**: For server-rendered React applications.
   - **React 18**: Leverages both server and client components.
   - **TailwindCSS (v4)**: For styling.
-  - **Mock Service Worker (MSW)**: To simulate backend HTTP requests during development.
 
 - **Backend**
   - **Node.js**: Chosen for the backend, though not yet implemented.
 
 ### Key Decisions
 
-- **Authentication**: Custom implementation using `AuthContext` and mocked fetch requests until backend is implemented.
-- **State Management**: Authentication state is managed manually, integrating seamlessly with MSW and the future Node.js backend.
+- **Authentication**: Custom implementation using `AuthContext` with HttpOnly cookies. Local development uses the Express dev API under `apps/api` for mocked endpoints; tests use MSW-based mocks registered by the test setup.
+- **State Management**: Authentication state is managed manually, integrating seamlessly with Node.js on backend.
 
 ## Features
 
@@ -93,16 +133,6 @@ In the Finances section, users can view:
 
 - A comprehensive table of income and expenses
 - Cards showing total income and fixed monthly expenses
-
-## MSW Organization
-
-The MSW is set up to handle authentication-related HTTP requests. It features dedicated handlers for:
-
-- Signing in
-- Signing up
-- Password resets
-
-This setup allows for clean separation and easy management of mock endpoints during development.
 
 ## Conclusion
 
