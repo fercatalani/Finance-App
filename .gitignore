@@ -43,3 +43,6 @@ next-env.d.ts
 
 # Copilot instructions 
 .copilot-instructions.md
+
+# docs folder
+/docs/
