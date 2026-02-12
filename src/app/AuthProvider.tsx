@@ -1,15 +1,4 @@
-"use client";
-
-import { useEffect } from "react";
-
+// Preserving the wrapper and avoiding unnecessary client bundling
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    if (process.env.NODE_ENV === "development") {
-      import("../mocks/browser").then(({ worker }) => {
-        worker.start({ onUnhandledRequest: "bypass" });
-      });
-    }
-  }, []);
-
   return <>{children}</>;
 }

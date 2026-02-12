@@ -13,7 +13,7 @@ export async function getServerSession(): Promise<User | null> {
 
   if (!session) return null;
 
-  // During development with MSW, derive the mock user locally so server components
+  // During development derive the mock user locally so server components
   // don't depend on the browser service worker.
   if (process.env.NODE_ENV === "development") {
     return {

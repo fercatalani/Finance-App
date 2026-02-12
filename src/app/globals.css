@@ -5,6 +5,30 @@
 @layer base {
   :root {
     --font-geist-sans: "Geist", sans-serif;
+
+    /* Neutral system */
+    --neutral-bg: #fbfbfc; /* page background */
+    --neutral-surface: #f3f4f6; /* cards, panels */
+    --neutral-ink: #0f1724; /* primary text */
+    --neutral-muted: #4b5563; /* secondary text */
+
+    /* Option B: muted berry (ribbon-4) */
+    --primary-cta: #384959; /* primary CTA fill */
+    --primary-cta-hover: #6a89a7;
+
+    /* Ribbon / category colors (muted steps inspired by flag) */
+    --ribbon-1: #f6cedf;
+    --ribbon-2: #e79bbf;
+    --ribbon-3: #c86b9a;
+    --ribbon-4: #a53d6e;
+    --ribbon-5: #7a254c;
+
+    /* Semantic states */
+    --state-success: #3c9d63;
+    --state-warning: #eca77a;
+    --state-error: #d04b3a;
+
+    /* Legacy tokens (kept for compatibility) */
     --slate-blue-gray: #2e3b44;
     --steel-blue: #6a89a7;
     --powder-blue: #b0c3d6;
@@ -25,9 +49,16 @@
   }
 }
 
+/*
+Contrast considerations:
+- Primary text should meet WCAG AA on page backgrounds. Use --neutral-ink (#0F1724) on --neutral-bg (#FBFBFC) for high contrast.
+- Ribbon steps are muted; when used with text overlays prefer deeper steps (--ribbon-3..5) for label legibility or use white text on dark ribbon steps.
+- Do not rely on color alone to convey critical states — pair with icons or patterns for accessibility.
+*/
+
 @layer components {
   .primaryButton {
-    @apply bg-[var(--charcoal-blue)] hover:bg-[var(--metallic-blue)] w-full rounded-full py-3 mt-6 text-pure-white transition-colors cursor-pointer ease-in-out duration-300;
+    @apply bg-[var(--primary-cta)] hover:bg-[var(--primary-cta-hover)] w-full rounded-full py-3 mt-6 text-pure-white transition-colors cursor-pointer ease-in-out duration-300;
   }
 
   .alert-error {
