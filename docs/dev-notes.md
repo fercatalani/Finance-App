@@ -1,13 +1,22 @@
-## MSW & Auth
+## Development Notes — Mocking & Auth (updated Feb 12, 2026)
 
-- This project uses MSW (Mock Service Worker) for local development only. MSW runs in the browser and intercepts client-side requests.
-- Server-side code (Next.js server components, middleware, or server fetches) does not go through the browser worker. To make server-side code behave predictably during development we use a small dev fallback:
-  - `getServerSession()` in `src/lib/get-server-session.ts` returns a mock user in `NODE_ENV=development` so server components do not depend on the browser worker.
-  - The sign-in flow sets a non-HttpOnly dev cookie (`session=fake-session`) in the browser after a successful MSW sign-in so subsequent navigations include a cookie the middleware can check. This is a development-only convenience and not secure for production.
-- When you replace MSW with a real backend, remove the dev cookie logic and ensure `getServerSession()` fetches the real `/api/auth/session` (it already does in non-dev mode).
+Summary:
 
-Recommended local workflow:
+- Local development should use the Express dev API at `apps/api` for mocked endpoints that need realistic server behavior (HttpOnly cookies, headers).
+- MSW remains available for tests (Jest) — test suites register handlers via test setup.
 
-1. Run `npm install` then `npm run dev`.
-2. Sign in using the mocked credentials in MSW (see `src/mocks/handlers/auth.ts`).
-3. When switching to a real backend, remove the dev-cookie code in `src/app/(public)/sign-in/page.tsx` and rely on real HttpOnly cookies from the server.
+Run tests:
+
+```bash
+npm ci
+npm test
+```
+
+Jest specifics:
+
+- Tests use a test-specific TS config at `tsconfig.jest.json` and `jest.setup.ts` for DOM matchers.
+- If you change test mocking behavior, update `jest.setup.ts` and `jest.config.cjs` accordingly.
+
+AuthProvider:
+
+- `src/app/AuthProvider.tsx` was converted to a non-starting wrapper: it will no longer import or start mocks. If you need a client-side gate, implement a small `ClientAuthGate` component that only runs in client bundles.

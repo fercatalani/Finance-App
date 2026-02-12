@@ -1,5 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# --- ReactJS (Frontend) ---
+
 # dependencies
 /node_modules
 /.pnp
@@ -45,4 +47,7 @@ next-env.d.ts
 .copilot-instructions.md
 
 # docs folder
-/docs/
+/docs/design
+
+# --- Node.js (Backend) ---
+/apps/api/node_modules
