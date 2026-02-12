@@ -11,15 +11,12 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "@apollo/client": "^4.0.5",
     "@hookform/resolvers": "^5.2.2",
-    "graphql": "^16.11.0",
     "next": "15.5.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.65.0",
-    "zod": "^4.1.12",
-    "zustand": "^5.0.8"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -35,15 +32,9 @@
     "eslint-config-next": "15.5.3",
     "jest": "^29.6.1",
     "jest-environment-jsdom": "^29.6.1",
-    "msw": "^2.12.2",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.18",
     "ts-jest": "^29.1.0",
     "typescript": "^5"
-  },
-  "msw": {
-    "workerDirectory": [
-      "public"
-    ]
   }
 }
