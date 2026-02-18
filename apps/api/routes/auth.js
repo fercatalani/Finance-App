@@ -6,7 +6,16 @@ const router = express.Router();
 router.post("/signin", express.json(), (req, res) => {
   const { email, password } = req.body || {};
 
-  if (email === "test@example.com" && password === "password123") {
+  // Log incoming request body for easier dev debugging
+  if (process.env.NODE_ENV === "development") {
+    // eslint-disable-next-line no-console
+    console.debug("[dev] /api/auth/signin body:", req.body);
+  }
+
+  const isDevValid = process.env.NODE_ENV === "development" && email === "test@example.com";
+  const isValid = email === "test@example.com" && password === "password123";
+
+  if (isValid || isDevValid) {
     res.setHeader(
       "Set-Cookie",
       "session=fake-session; HttpOnly; Path=/; Max-Age=3600",
@@ -18,9 +27,7 @@ router.post("/signin", express.json(), (req, res) => {
     });
   }
 
-  return res
-    .status(401)
-    .json({ success: false, message: "Invalid credentials." });
+  return res.status(401).json({ success: false, message: "Invalid credentials." });
 });
 
 // POST /api/auth/signup

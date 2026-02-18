@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import copySignIn from "./signIn.copy.json";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -39,15 +40,16 @@ export default function SignInPage() {
     resolver: zodResolver(signInSchema),
   });
 
+  const [formError, setFormError] = useState<string | null>(null);
+
   const onSubmit = async (body: SignInData) => {
+    setFormError(null);
+
     const res = await signIn(body);
 
-    if (!res) return;
-
-    if (process.env.NODE_ENV === "development") {
-      try {
-        document.cookie = "session=fake-session; Path=/";
-      } catch {}
+    if (!res) {
+      setFormError("Invalid email or password");
+      return;
     }
 
     return router.push("/dashboard");
@@ -62,6 +64,11 @@ export default function SignInPage() {
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-4 w-full mt-10"
         >
+          {formError && (
+            <div className="text-sm text-red-600 bg-red-50 p-2 rounded">
+              {formError}
+            </div>
+          )}
           <Input
             label={emailLabel}
             placeholder="Enter your email"
@@ -101,14 +108,6 @@ export default function SignInPage() {
             </button>
           </p>
         </div>
-      </section>
-      <section className="h-screen lg:w-2/3 hidden py-6 pr-6 lg:flex items-center justify-center relative overflow-hidden bg-transparent">
-        <Image
-          src={imageGif}
-          alt=""
-          className="w-full h-full rounded-2xl object-fill"
-          unoptimized
-        />
       </section>
     </>
   );
