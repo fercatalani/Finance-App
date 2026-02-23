@@ -100,12 +100,19 @@ The architecture is planned to be build with a clear separation between the fron
   - **TailwindCSS (v4)**: For styling.
 
 - **Backend**
-  - **Node.js**: Chosen for the backend, though not yet implemented.
+  - **Node.js + Express**: REST API in `apps/api`.
+  - **PostgreSQL**: Primary database for users and auth tokens.
+  - **Prisma**: ORM with schema at `apps/api/prisma/schema.prisma`.
+  - **Argon2**: For password hashing.
 
 ### Key Decisions
 
-- **Authentication**: Custom implementation using `AuthContext` with HttpOnly cookies. Local development uses the Express dev API under `apps/api` for mocked endpoints; tests use MSW-based mocks registered by the test setup.
-- **State Management**: Authentication state is managed manually, integrating seamlessly with Node.js on backend.
+- **Authentication**:
+  - Credentials (`email`, `password`) are handled by the Express API (`/api/auth/signin`, `/api/auth/signup`).
+  - Passwords are stored as Argon2 hashes in the `User` table.
+  - Long-lived session tokens are stored (hashed) in the `RefreshToken` table and sent to the client via HttpOnly `session` cookies.
+  - The Next.js middleware does a quick cookie presence check for protected routes; the private layout calls `getServerSession` to validate the session against the API before rendering.
+- **State Management**: Authentication state on the client is minimal; most checks happen server-side via cookies and the backend session endpoint.
 
 ## Features
 
@@ -113,9 +120,16 @@ The architecture is planned to be build with a clear separation between the fron
 
 The application implements the following authentication flows:
 
-- **Sign-In**: Users can sign in through a form that sends a POST request to `/api/auth/signin`. On success, users are redirected to the dashboard.
-- **Sign-Up**: Users can create an account via a form that posts to `/api/auth/signup`. After creation, they are redirected to the dashboard or sign-in page.
-- **Forgot Password**: Users can request a password reset, receiving a message confirming that a reset code has been sent to their email.
+- **Sign-In**:
+  - Frontend sends `POST /api/auth/signin` with `email` and `password`.
+  - Express validates credentials against the `User` table (Argon2 verify) and, on success, issues a new `session` cookie backed by a `RefreshToken` record.
+  - The user is then redirected to the dashboard; subsequent protected requests include the `session` cookie automatically.
+- **Sign-Up**:
+  - Frontend sends `POST /api/auth/signup` with `firstName`, `lastName`, `email`, and `password`.
+  - Express creates a new `User` record with a hashed password and a new `RefreshToken` for the initial session.
+  - After creation, the client redirects to the sign-in flow.
+- **Forgot Password**:
+  - Currently implemented as a stub endpoint (`/api/auth/forgot-password`) that always returns success; the DB schema and API are ready to be extended with real reset tokens in the future.
 
 ### Dashboard Components
 
@@ -149,9 +163,10 @@ Move hooks, state, effects, and event handlers into colocated Client Components.
 Do not mark page.tsx as "use client" unless unavoidable.
 
 6️⃣ Middleware & auth discipline
-Validate that authentication and route protection are handled by middleware.
-Do not add client-side redirects for auth-protected routes.
-Keep middleware logic minimal and cookie-based.
+Validate that authentication and route protection are handled by middleware **and** server-side session checks:
+
+- Middleware: minimal, cookie-presence based.
+- Layouts/pages: use `getServerSession` to validate the session with the backend before rendering protected UI.
 
 7️⃣ Safe refactoring contract (VERY IMPORTANT)
 Before applying any refactor, explain:
