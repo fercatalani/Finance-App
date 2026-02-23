@@ -43,7 +43,7 @@ function setSessionCookie(res, rawToken, expiresAt) {
     "SameSite=Lax",
   ];
 
-  // Em produção, ideal adicionar "Secure" quando estiver em HTTPS.
+  // Em produção, adicionar "Secure" quando estiver em HTTPS
   res.setHeader("Set-Cookie", cookieParts.join("; "));
 }
 

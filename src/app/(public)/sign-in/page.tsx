@@ -9,8 +9,6 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/app/components/Input";
 import { Button } from "@/app/components/Button";
 import { signIn } from "@/lib/auth";
-import Image from "next/image";
-import imageGif from "@/app/assets/images/image.gif";
 
 const {
   title,

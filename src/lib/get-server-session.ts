@@ -8,25 +8,15 @@ export type User = {
 };
 
 export async function getServerSession(): Promise<User | null> {
-  const cookieStore = cookies();
-  const session = (await cookieStore).get("session")?.value;
+  const cookieStore = await cookies();
+  const session = cookieStore.get("session")?.value;
 
   if (!session) return null;
-
-  // During development derive the mock user locally so server components
-  // don't depend on the browser service worker.
-  if (process.env.NODE_ENV === "development") {
-    return {
-      id: "1",
-      firstName: "Jane",
-      lastName: "Doe",
-      email: "test@example.com",
-    };
-  }
-
-  // In non-dev (real backend), call the session API with the cookie.
   try {
-    const res = await fetch("/api/auth/session", {
+    const baseUrl =
+      process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
+
+    const res = await fetch(`${baseUrl}/auth/session`, {
       headers: { cookie: `session=${session}` },
       cache: "no-store",
     });
