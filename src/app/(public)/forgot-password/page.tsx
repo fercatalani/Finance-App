@@ -5,8 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/app/components/Input";
 import { Button } from "@/app/components/Button";
-import Image from "next/image";
-import imageGif from "@/app/assets/images/image.gif";
 import copyForgotPassword from "./forgotPassword.copy.json";
 import { useRouter } from "next/navigation";
 import { forgotPassword } from "@/lib/auth";
@@ -72,14 +70,6 @@ export default function ForgotPasswordPage() {
             {signIn}
           </button>
         </p>
-      </section>
-      <section className="h-screen lg:w-2/3 hidden py-6 pr-6 lg:flex items-center justify-center relative overflow-hidden bg-transparent">
-        <Image
-          src={imageGif}
-          alt=""
-          className="w-full h-full rounded-2xl object-fill"
-          unoptimized
-        />
       </section>
     </>
   );
