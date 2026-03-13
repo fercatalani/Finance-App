@@ -1,127 +1,233 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import copySignIn from "./signUp.copy.json";
-import z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import copySignUp from "./signUp.copy.json";
 import { useForm } from "react-hook-form";
-import { Input } from "@/app/components/Input";
-import { Button } from "@/app/components/Button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { signUp } from "@/lib/auth";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const {
   title,
   subtitle,
-  firstNameLabel,
-  lastNameLabel,
+  nameLabel,
+  surnameLabel,
   emailLabel,
   passwordLabel,
   confirmPasswordLabel,
   signUpButton,
   haveAccount,
-  signIn,
-} = copySignIn;
+  logIn,
+} = copySignUp;
 
-const signUpSchema = z
-  .object({
-    firstName: z.string().min(1, "Required"),
-    lastName: z.string().min(1, "Required"),
-    email: z.email("Invalid email"),
-    password: z.string().min(8, "At least 8 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-type SignUpData = z.infer<typeof signUpSchema>;
+type SignUpData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 export default function SignUpPage() {
   const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<SignUpData>({
-    resolver: zodResolver(signUpSchema),
+  const form = useForm<SignUpData>({
+    mode: "onChange",
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
+
+  const password = form.watch("password");
 
   const onSubmit = async (data: SignUpData) => {
     const res = await signUp(data);
 
     if (!res) return;
 
-    return router.push("/sign-in");
+    return router.push("/log-in");
   };
 
   return (
     <>
-      <section className="flex flex-col w-[480px] lg:w-1/3 p-8">
-        <h1 className="mb-4 text-3xl font-bold">{title}</h1>
-        <h2 className="text-lg font-regular">{subtitle}</h2>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-4 w-full mt-10"
-        >
-          <div className="flex flex-row gap-4">
-            <Input
-              label={firstNameLabel}
-              placeholder="Enter your first name"
-              type="text"
-              register={register("firstName")}
-              autocomplete="given-name"
-              error={errors.firstName}
-            />
-            <Input
-              label={lastNameLabel}
-              placeholder="Enter your last name"
-              type="text"
-              register={register("lastName")}
-              autocomplete="family-name"
-              error={errors.lastName}
-            />
-          </div>
-          <Input
-            label={emailLabel}
-            placeholder="Enter your email"
-            type="email"
-            register={register("email")}
-            autocomplete="email"
-            error={errors.email}
-          />
-          <Input
-            label={passwordLabel}
-            placeholder="Enter your password"
-            type="password"
-            register={register("password")}
-            autocomplete="new-password"
-            error={errors.password}
-          />
-          <Input
-            label={confirmPasswordLabel}
-            placeholder="Confirm your password"
-            type="password"
-            register={register("confirmPassword")}
-            autocomplete="new-password"
-            error={errors.confirmPassword}
-          />
-          <Button type="submit" isLoading={isSubmitting}>
-            {signUpButton}
-          </Button>
-        </form>
-        <hr className="my-16 w-80 self-center border-[var(--charcoal-blue)]" />
+      <Card className="flex h-full flex-col justify-between">
+        <div className="self-start border-solid border shadow-md p-3 sm:py-2 w-fit box-content border-secondary rounded-full items-center space-y-0 flex flex-row gap-2">
+          <Image alt="" src="/images/app-icon.png" width={30} height={22} />
+          <p className="hidden sm:block font-stretch-extra-condensed text-primary uppercase text-md md:text-lg">
+            Catalani Control
+          </p>
+        </div>
 
-        <p className="text-sm text-center">
-          {haveAccount}{" "}
-          <button
-            className="text-sky-blue hover:underline cursor-pointer"
-            onClick={() => router.push("/sign-in")}
-          >
-            {signIn}
-          </button>
-        </p>
-      </section>
+        <div>
+          <CardHeader>
+            <CardTitle>{title}</CardTitle>
+            <CardDescription>{subtitle}</CardDescription>
+          </CardHeader>
+          <CardContent className="w-[500px]">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+                <div className="flex flex-row gap-4">
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    rules={{
+                      required: "Required",
+                      pattern: {
+                        value: /^[a-zA-Z]+$/,
+                        message: "Only letters are allowed",
+                      },
+                    }}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>{nameLabel}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your name"
+                            type="text"
+                            autoComplete="given-name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    rules={{
+                      required: "Required",
+                      pattern: {
+                        value: /^[a-zA-Z]+$/,
+                        message: "Only letters are allowed",
+                      },
+                    }}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>{surnameLabel}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your surname"
+                            type="text"
+                            autoComplete="family-name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  rules={{
+                    required: "Required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Invalid email",
+                    },
+                  }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{emailLabel}</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your email"
+                          type="email"
+                          autoComplete="email"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  rules={{
+                    required: "Required",
+                    minLength: {
+                      value: 8,
+                      message: "At least 8 characters",
+                    },
+                  }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{passwordLabel}</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your password"
+                          type="password"
+                          autoComplete="new-password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  rules={{
+                    required: "Required",
+                    validate: (value) =>
+                      value === password || "Passwords do not match",
+                  }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{confirmPasswordLabel}</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Confirm your password"
+                          type="password"
+                          autoComplete="new-password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting ? "Loading..." : signUpButton}
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+        </div>
+
+        <CardFooter>
+          <p>
+            {haveAccount}
+            <Button variant="link" onClick={() => router.push("/log-in")}>
+              {logIn}
+            </Button>
+          </p>
+        </CardFooter>
+      </Card>
     </>
   );
 }

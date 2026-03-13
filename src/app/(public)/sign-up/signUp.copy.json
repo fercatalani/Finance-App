@@ -1,12 +1,12 @@
 {
-  "title": "Create your account",
+  "title": "Start simplifying your finances",
   "subtitle": "Let us handle the numbers while you focus on life.",
-  "firstNameLabel": "First Name",
-  "lastNameLabel": "Last Name",
+  "nameLabel": "Name",
+  "surnameLabel": "Surname",
   "emailLabel": "Email",
   "passwordLabel": "Password",
-  "confirmPasswordLabel": "Confirm Password",
+  "confirmPasswordLabel": "Confirm password",
   "signUpButton": "Sign up",
   "haveAccount": "Already have an account?",
-  "signIn": "Sign in"
+  "logIn": "Log in"
 }

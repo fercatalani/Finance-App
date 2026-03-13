@@ -1,32 +1,42 @@
 "use client";
 
-import z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Input } from "@/app/components/Input";
-import { Button } from "@/app/components/Button";
-import copyForgotPassword from "./forgotPassword.copy.json";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import copyForgotPassword from "./forgotPassword.copy.json";
+import Image from "next/image";
 import { forgotPassword } from "@/lib/auth";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
-const { title, subtitle, emailLabel, resetButton, noAccount, signIn } =
+const { title, subtitle, emailLabel, resetButton, noAccount, logIn } =
   copyForgotPassword;
-
-const signInSchema = z.object({
-  email: z.email("Enter a valid email"),
-});
-
-type ForgotPasswordData = z.infer<typeof signInSchema>;
+type ForgotPasswordData = {
+  email: string;
+};
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<ForgotPasswordData>({
-    resolver: zodResolver(signInSchema),
+  const form = useForm<ForgotPasswordData>({
+    defaultValues: {
+      email: "",
+    },
   });
 
   // TODO: implement actual forgot password flow related to send code to email and reset password
@@ -35,42 +45,69 @@ export default function ForgotPasswordPage() {
 
     if (!res) return;
 
-    return router.push("/sign-in");
+    return router.push("/log-in");
   };
 
   return (
     <>
-      <section className="flex flex-col min-w-10 lg:w-1/3 p-8">
-        <h1 className="mb-4 text-3xl font-bold">{title}</h1>
-        <h2 className="text-lg font-regular">{subtitle}</h2>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-4 w-full mt-10"
-        >
-          <Input
-            label={emailLabel}
-            type="email"
-            placeholder="Enter your email"
-            register={register("email")}
-            autocomplete="email"
-            error={errors.email}
-          />
-          <Button type="submit" isLoading={isSubmitting} className="mt-6">
-            {resetButton}
-          </Button>
-        </form>
-        <hr className="my-16 w-80 self-center border-[var(--charcoal-blue)]" />
+      <Card className="flex h-full flex-col justify-between">
+        <div className="self-start border-solid border  shadow-md p-3 sm:py-2 w-fit box-content border-secondary rounded-full items-center space-y-0 flex flex-row gap-2">
+          <Image alt="" src="/images/app-icon.png" width={30} height={22} />
+          <p className="hidden sm:block font-stretch-extra-condensed text-primary uppercase text-md md:text-lg">
+            Catalani Control
+          </p>
+        </div>
 
-        <p className="text-center text-sm">
-          {noAccount}{" "}
-          <button
-            className="text-sky-blue hover:underline cursor-pointer"
-            onClick={() => router.push("/sign-in")}
-          >
-            {signIn}
-          </button>
-        </p>
-      </section>
+        <div className="w-full sm:w-[500px]">
+          <CardHeader>
+            <CardTitle>{title}</CardTitle>
+            <CardDescription>{subtitle}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  rules={{
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Enter a valid email",
+                    },
+                  }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{emailLabel}</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="Enter your email"
+                          autoComplete="email"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting ? "Loading..." : resetButton}
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+        </div>
+
+        <CardFooter>
+          <p>
+            {noAccount}
+            <Button variant="link" onClick={() => router.push("/log-in")}>
+              {logIn}
+            </Button>
+          </p>
+        </CardFooter>
+      </Card>
     </>
   );
 }

@@ -1,0 +1,10 @@
+{
+  "title": "Access your account",
+  "description": "Log in to review balances, track spending, and stay on top of your money.",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "forgotPassword": "Forgot your password?",
+  "logInButton": "Log in",
+  "noAccount": "Need an account?",
+  "signUp": "Sign up"
+}
