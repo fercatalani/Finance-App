@@ -32,9 +32,9 @@ Finance App is a financial management application designed to help users track t
 │   │   │   ├── 📁 reset-password
 │   │   │   ├── ⚙️ forgotPassword.copy.json
 │   │   │   └── 📄 page.tsx
-│   │   ├── 📁 sign-in
+│   │   ├── 📁 log-in
 │   │   │   ├── 📄 page.tsx
-│   │   │   └── ⚙️ signIn.copy.json
+│   │   │   └── ⚙️ logIn.copy.json
 │   │   ├── 📁 sign-up
 │   │   │   ├── 📄 page.tsx
 │   │   │   └── ⚙️ signUp.copy.json
@@ -98,6 +98,8 @@ The architecture is planned to be build with a clear separation between the fron
   - **Next.js (App Router)**: For server-rendered React applications.
   - **React 18**: Leverages both server and client components.
   - **TailwindCSS (v4)**: For styling.
+  - **shadcn/ui + Radix primitives**: Shared UI primitives for buttons, inputs, forms, cards, separators.
+  - **React Hook Form**: Handles form state and validation rules for auth flows.
 
 - **Backend**
   - **Node.js + Express**: REST API in `apps/api`.
@@ -108,7 +110,7 @@ The architecture is planned to be build with a clear separation between the fron
 ### Key Decisions
 
 - **Authentication**:
-  - Credentials (`email`, `password`) are handled by the Express API (`/api/auth/signin`, `/api/auth/signup`).
+  - Credentials (`email`, `password`) are handled by the Express API (`/api/auth/login`, `/api/auth/signup`).
   - Passwords are stored as Argon2 hashes in the `User` table.
   - Long-lived session tokens are stored (hashed) in the `RefreshToken` table and sent to the client via HttpOnly `session` cookies.
   - The Next.js middleware does a quick cookie presence check for protected routes; the private layout calls `getServerSession` to validate the session against the API before rendering.
@@ -120,14 +122,16 @@ The architecture is planned to be build with a clear separation between the fron
 
 The application implements the following authentication flows:
 
-- **Sign-In**:
-  - Frontend sends `POST /api/auth/signin` with `email` and `password`.
+- **Log-In**:
+  - Frontend sends `POST /api/auth/login` with `email` and `password`.
   - Express validates credentials against the `User` table (Argon2 verify) and, on success, issues a new `session` cookie backed by a `RefreshToken` record.
   - The user is then redirected to the dashboard; subsequent protected requests include the `session` cookie automatically.
+  - Public route: `/log-in` under `src/app/(public)/log-in/page.tsx`, using shared shadcn `Form`, `Input`, and `Button` components.
 - **Sign-Up**:
   - Frontend sends `POST /api/auth/signup` with `firstName`, `lastName`, `email`, and `password`.
   - Express creates a new `User` record with a hashed password and a new `RefreshToken` for the initial session.
-  - After creation, the client redirects to the sign-in flow.
+  - After creation, the client redirects to the log-in flow.
+  - Public route: `/sign-up` under `src/app/(public)/sign-up/page.tsx`, which also uses shadcn form primitives.
 - **Forgot Password**:
   - Currently implemented as a stub endpoint (`/api/auth/forgot-password`) that always returns success; the DB schema and API are ready to be extended with real reset tokens in the future.
 
@@ -151,6 +155,8 @@ In the Finances section, users can view:
 ## Conclusion
 
 Finance App is designed with a focus on simplicity and user experience. By leveraging modern technologies and a clear architecture, the app aims to provide users with effective tools for managing their finances.
+
+The visual design is driven by CSS custom properties defined in `src/app/globals.css`, using OKLCH color values for backgrounds, text, accents, and chart ribbons. Tailwind utilities reference these tokens (e.g., `bg-background`, `text-foreground`, `bg-primary`) so the design system can be evolved centrally without rewriting component styles.
 
 ---
 

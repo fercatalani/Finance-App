@@ -12,9 +12,9 @@ Features:
 
 Auth endpoints:
 
-- `POST /auth/signin` -> expects `{ email, password }`, responds with JSON user and sets an HttpOnly `session` cookie on success.
+- `POST /auth/login` -> expects `{ email, password }`, responds with JSON user and sets an HttpOnly `session` cookie on success.
 - `POST /auth/signup` -> creates a mock user and may set the `session` cookie.
-- `POST /auth/signout` -> clears the `session` cookie (signs out).
+- `POST /auth/logout` -> clears the `session` cookie (logs out).
 - `GET /auth/session` -> returns the current user session (JSON) when a valid `session` cookie is present, otherwise `401`/`null`.
 
 Notes on cookies and behavior:

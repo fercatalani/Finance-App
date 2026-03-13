@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+## Getting Started - Frontend
 
 First, run the development server:
 
@@ -14,7 +14,37 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000] with your browser to see the result.
+
+## Backend & Docker
+
+The API backend is a Node.js/Express app in `apps/api` and uses PostgreSQL in Docker.
+
+Start the database container (from the project root):
+
+```bash
+docker compose up -d db
+```
+
+Start the Express API (in another terminal):
+
+```bash
+cd apps/api
+npm install       # primeira vez na máquina
+npm run dev
+```
+
+The API will run on `http://localhost:4000` and the Next.js app on `http://localhost:3000`, with `/api/*` proxied to the Express server in development.
+
+Key routes in the App Router:
+
+- Public auth:
+  - `/log-in` – log in to an existing account
+  - `/sign-up` – create a new account
+  - `/forgot-password` – start the password reset flow
+- Private app:
+  - `/dashboard` – main overview after authentication
+  - `/finances` – detailed income/expense view
 
 ## Authentication & Development
 
