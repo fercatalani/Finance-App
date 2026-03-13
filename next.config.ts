@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
     return [];
   },
   turbopack: {
-    root: "./",
+    root: process.cwd(),
   },
 };
 

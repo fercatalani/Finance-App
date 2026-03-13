@@ -20,6 +20,15 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
   },
+  {
+    files: ["tailwind.config.js", "postcss.config.js"],
+    languageOptions: {
+      sourceType: "commonjs",
+    },
+    env: {
+      node: true,
+    },
+  },
 ];
 
 export default eslintConfig;
