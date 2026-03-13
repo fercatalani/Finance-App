@@ -1,4 +1,4 @@
-import { signIn, signUp, forgotPassword } from "../auth";
+import { logIn, signUp, forgotPassword } from "../auth";
 
 const originalFetch = global.fetch;
 
@@ -11,14 +11,14 @@ describe("auth lib", () => {
     global.fetch = originalFetch;
   });
 
-  it("signIn returns null on non-OK response", async () => {
+  it("logIn returns null on non-OK response", async () => {
     (global.fetch as jest.Mock).mockResolvedValue({ ok: false });
 
-    const res = await signIn({ email: "test@example.com", password: "pass" });
+    const res = await logIn({ email: "test@example.com", password: "pass" });
 
     expect(res).toBeNull();
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/auth/signin",
+      "/api/auth/login",
       expect.any(Object),
     );
   });
