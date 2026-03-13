@@ -12,11 +12,11 @@ export default async function PrivateLayout({
   const user = await getServerSession();
 
   if (!user) {
-    redirect("/sign-in");
+    redirect("/log-in");
   }
 
   return (
-    <div className="min-h-screen flex bg-background text-[var(--pure-white)]">
+    <div className="min-h-screen flex bg-background text-foreground">
       <NavigationDesktop />
 
       <main className="flex-1 p-6">{children}</main>

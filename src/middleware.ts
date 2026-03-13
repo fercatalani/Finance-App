@@ -7,8 +7,8 @@ export function middleware(req: NextRequest) {
   const session = req.cookies.get("session")?.value;
 
   if (!session) {
-    const signInUrl = new URL("/sign-in", req.url);
-    return NextResponse.redirect(signInUrl);
+    const logInUrl = new URL("/log-in", req.url);
+    return NextResponse.redirect(logInUrl);
   }
 
   return NextResponse.next();

@@ -1,4 +1,4 @@
-type SignInBody = { email: string; password: string };
+type LogInBody = { email: string; password: string };
 type SignUpBody = {
   firstName: string;
   lastName: string;
@@ -6,8 +6,8 @@ type SignUpBody = {
   password: string;
 };
 
-export async function signIn(body: SignInBody) {
-  const res = await fetch("/api/auth/signin", {
+export async function logIn(body: LogInBody) {
+  const res = await fetch("/api/auth/login", {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },

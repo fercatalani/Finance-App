@@ -88,7 +88,7 @@ export const signUp = async (req, res) => {
   });
 };
 
-export const signIn = async (req, res) => {
+export const logIn = async (req, res) => {
   const { email, password } = req.body || {};
 
   if (!email || !password) {
@@ -163,7 +163,7 @@ export const getSession = async (req, res) => {
   });
 };
 
-export const signOut = async (req, res) => {
+export const logOut = async (req, res) => {
   const rawToken = getSessionTokenFromRequest(req);
   if (rawToken) {
     const tokenHash = hashToken(rawToken);

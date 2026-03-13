@@ -10,8 +10,8 @@ export async function getCurrentUser() {
   return data.user;
 }
 
-export async function signOut() {
-  const res = await fetch("/api/auth/signout", {
+export async function logOut() {
+  const res = await fetch("/api/auth/logout", {
     method: "POST",
     credentials: "include",
   });
