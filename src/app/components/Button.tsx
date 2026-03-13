@@ -17,7 +17,7 @@ export const Button = ({
     "w-full cursor-pointer rounded-full font-medium duration-400 ease-in-out transition-colors py-3 px-6";
   const variants = {
     primary:
-      "bg-[var(--primary-cta)] text-white hover:bg-[var(--primary-cta-hover)]",
+      "bg-primary text-primary-foreground hover:bg-[var(--primary-hover)]",
     secondary:
       "bg-transparent border border-[var(--neutral-muted)] text-[var(--neutral-ink)] hover:bg-[var(--neutral-surface)]",
   };

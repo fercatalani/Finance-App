@@ -27,10 +27,10 @@ export const Input = ({
     (type === "email"
       ? "email"
       : type === "password"
-      ? "current-password"
-      : type === "name"
-      ? "name"
-      : undefined);
+        ? "current-password"
+        : type === "name"
+          ? "name"
+          : undefined);
 
   return (
     <label className="block text-sm font-medium">
@@ -40,7 +40,7 @@ export const Input = ({
         {...register}
         placeholder={placeholder || label}
         autoComplete={autocompleteAttr}
-        className={`w-full rounded-full px-4 py-2 mt-2 mb-1 placeholder:text-charcoal-blue text-slate-blue-gray bg-powder-blue focus:outline-none focus:ring-2 focus:ring-steel-blue ${className}`}
+        className={`w-full rounded-full px-4 py-2 mt-2 mb-1 placeholder:text-muted-foreground text-foreground bg-secondary focus:outline-none focus:ring-2 focus:ring-primary ${className}`}
       />
       {error && <span className="text-red-500 text-xs">{error.message}</span>}
     </label>

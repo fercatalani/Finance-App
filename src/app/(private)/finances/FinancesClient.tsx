@@ -82,7 +82,7 @@ export default function FinancesClient() {
         </select>
         <button
           type="submit"
-          className="px-3 py-1 bg-[var(--primary-cta)] text-white rounded"
+          className="px-3 py-1 bg-primary text-primary-foreground rounded"
         >
           Add
         </button>
