@@ -21,12 +21,15 @@ const eslintConfig = [
     ],
   },
   {
-    files: ["tailwind.config.js", "postcss.config.js"],
+    files: ["postcss.config.js"],
     languageOptions: {
       sourceType: "commonjs",
-    },
-    env: {
-      node: true,
+      globals: {
+        module: "readonly",
+        require: "readonly",
+        process: "readonly",
+        __dirname: "readonly",
+      },
     },
   },
 ];
